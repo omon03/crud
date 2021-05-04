@@ -14,17 +14,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.crud.dao.UserDaoImpl;
 import com.crud.model.User;
+import com.crud.service.UserServiceImpl;
 import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/users")
 public class UsersController {
 
-    private UserDaoImpl userDaoImpl;
+    private UserServiceImpl userService;
+
+    public UsersController() { }
 
     @Autowired
-    public UsersController(UserDaoImpl userDaoImpl) {
-        this.userDaoImpl = userDaoImpl;
+    public UsersController(UserServiceImpl userService) {
+        this.userService = userService;
     }
 
     /**
@@ -34,7 +37,7 @@ public class UsersController {
      */
     @GetMapping()
     public String index(Model model) {
-        model.addAttribute("users", userDaoImpl.getAll());
+        model.addAttribute("users", userService.showAllUsers());
         return "/users/index";
     }
 
@@ -46,12 +49,13 @@ public class UsersController {
      */
     @RequestMapping("/{id}")
     public String showUserById(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userDaoImpl.showUserById(id));
+        model.addAttribute("user", userService.getUserById(id));
         return "/users/shower";
     }
 
     @GetMapping("/new")
-    public String newUser(@ModelAttribute("user") User user) {
+    public String newUser(Model model) {
+        model.addAttribute("user", new User());
         return "/users/new";
     }
 
@@ -63,17 +67,17 @@ public class UsersController {
             // См. аннотации полей класса User
             return "/users/new";
         }
-        userDaoImpl.save(user);
+        userService.saveUser(user);
         return "redirect:/users";
     }
 
     @GetMapping("/{id}/edit")
     public String editUser(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("user", userDaoImpl.showUserById(id));
+        model.addAttribute("user", userService.getUserById(id));
         return "/users/edit";
     }
 
-    @PatchMapping("/{id}")
+    @PostMapping("/{id}")
     public String updateUser(@ModelAttribute("user") @Valid User user,
                              BindingResult bindingResult,  // указывать сразу после проверяемого объекта!
                              @PathVariable("id") Long id) {
@@ -82,13 +86,13 @@ public class UsersController {
             // См. аннотации полей класса User
             return "/users/edit";
         }
-        userDaoImpl.update(id, user);
+        userService.updateUser(id, user);
         return "redirect:/users";
     }
 
-    @DeleteMapping("/{id}")
+    @GetMapping("/{id}/delete")
     public String deleteUser(@PathVariable("id") Long id) {
-        userDaoImpl.delete(id);
+        userService.deleteUserById(id);
         return "redirect:/users";
     }
 }

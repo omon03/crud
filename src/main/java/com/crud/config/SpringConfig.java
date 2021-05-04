@@ -1,5 +1,6 @@
 package com.crud.config;
 
+import java.util.Objects;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -20,6 +22,7 @@ import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -28,11 +31,12 @@ import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 @Configuration
+@PropertySource("classpath:property.properties")
 @EnableWebMvc
 @EnableJpaRepositories
 @ComponentScan(basePackages = "com.crud")
-@PropertySource("classpath:property.properties")
 public class SpringConfig implements WebMvcConfigurer {
+
     private final ApplicationContext applicationContext;
 
     @Autowired
@@ -70,44 +74,8 @@ public class SpringConfig implements WebMvcConfigurer {
         registry.viewResolver(resolver);
     }
 
-    @Bean
-    public DataSource dataSource() {
-        Properties pr = System.getProperties();
-        pr.getProperty("db.driver");
-        DriverManagerDataSource ds = new DriverManagerDataSource();
-        ds.setDriverClassName(pr.getProperty("db.driver"));
-        ds.setUrl(pr.getProperty("db.url"));
-        ds.setUsername("db.username");
-        ds.setPassword("db.password");
-        return ds;
+    @Override
+    public String toString() {
+        return "SpringConfig{" + "applicationContext=" + applicationContext + '}';
     }
-
-    @Bean
-    public JpaTransactionManager jpaTransactionManager(EntityManagerFactory emf) {
-        return new JpaTransactionManager(emf);
-    }
-
-    @Bean
-    public JpaVendorAdapter jpaVendorAdapter() {
-        HibernateJpaVendorAdapter jpaVendorAdapter =
-            new HibernateJpaVendorAdapter();
-        jpaVendorAdapter.setDatabase(Database.MYSQL);
-        jpaVendorAdapter.setGenerateDdl(true);
-        jpaVendorAdapter.setShowSql(
-            Boolean.parseBoolean(
-                System.getProperty("hibernate.show_sql")));
-        return jpaVendorAdapter;
-    }
-
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
-        LocalContainerEntityManagerFactoryBean lcemfb =
-            new LocalContainerEntityManagerFactoryBean();
-        lcemfb.setDataSource(dataSource());
-        lcemfb.setJpaVendorAdapter(jpaVendorAdapter());
-        lcemfb.setPackagesToScan("com.crud.model");
-        lcemfb.setJpaProperties(System.getProperties());
-        return lcemfb;
-    }
-
 }
