@@ -5,12 +5,16 @@
     <title>CRUD: User</title>
 </head>
 <body>
-
+<a th:href="@{/users}" th:text="Home"></a>
+<h1>User:</h1>
+<div>Name:</div>
 <p th:text="${user.getName()}">VALUE</p>
+<br>
+<div>Age:</div>
 <p th:text="${user.getAge()}">VALUE</p>
-
+<br>
 <a th:href="@{/users/{id}/edit(id=${user.getId()})}">Edit</a>
-
+<br>
 <form th:method="DELETE" th:action="@{/users/{id}(id=${user.getId()})}">
     <input type="submit" value="Delete"/>
 </form>
