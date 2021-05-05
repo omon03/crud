@@ -18,27 +18,22 @@ import jakarta.validation.constraints.Size;
 
 @Component
 @Entity
-@Table(name = "user")
 public class User {
 
     // FIELDS
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
     private Long id;
 
     @NotEmpty(message = "Not be empty")
     @Size(min = 3, max = 30, message = "ERROR")
-    @Column(name = "name")
     private String name;
 
     @PositiveOrZero(message = "Error")
     @Max(value = 150, message = "Error")
-    @Column(name = "age")
     private int age;
 
     @Email(message = "error")
-    @Column(name = "email")
     private String email;
 
     public User() {}

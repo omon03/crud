@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.crud.model.User;
 
 @Repository
-@Transactional
 public class UserDaoImpl implements UserDao {
 
     @PersistenceContext
