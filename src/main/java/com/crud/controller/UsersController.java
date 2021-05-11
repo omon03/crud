@@ -61,7 +61,7 @@ public class UsersController {
 
     @PostMapping()
     public String createUser(@ModelAttribute("user") @Valid User user,
-                             BindingResult bindingResult) {
+                             BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             // при вводе неправильных данных.
             // См. аннотации полей класса User

@@ -6,8 +6,8 @@ import com.crud.model.User;
 
 public interface UserService {
     User getUserById(Long id);
-    void saveUser(User user);
-    void deleteUserById(Long id);
+    User saveUser(User user) throws Exception;
+    boolean deleteUserById(Long id);
     List<User> showAllUsers();
-    void updateUser(Long id, User user);
+    User updateUser(Long id, User user);
 }
