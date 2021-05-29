@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.crud.model.Role;
@@ -25,22 +26,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @PersistenceContext
     private EntityManager em;
     private UserRepository userRepository;
-    private RoleRepository roleRepository;
+//    private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
-                           RoleRepository roleRepository,
+//                           RoleRepository roleRepository,
                            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+//        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username)
+    public UserDetails loadUserByUsername(String userName)
         throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(userName);
 
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
@@ -77,7 +78,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
 
         newUser.setName(user.getName());
-        newUser.setUserName(user.getUsername());
+        newUser.setUsername(user.getUsername());
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
         newUser.setEmail(user.getEmail());
         newUser.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));

@@ -20,7 +20,7 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 @Configuration
 @PropertySource("classpath:property.properties")
 @EnableWebMvc
-@EnableJpaRepositories
+@EnableJpaRepositories("com.crud")
 @ComponentScan(basePackages = "com.crud")
 public class SpringConfig implements WebMvcConfigurer {
 
@@ -36,13 +36,15 @@ public class SpringConfig implements WebMvcConfigurer {
         return new PropertySourcesPlaceholderConfigurer();
     }
 
+// THYMELEAF
     @Bean
     public SpringResourceTemplateResolver templateResolver() {
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setApplicationContext(applicationContext);
         templateResolver.setPrefix("/WEB-INF/views/");
-//        templateResolver.setSuffix(".jsp");
+        // templateResolver.setSuffix(".jsp");
         templateResolver.setSuffix(".html");
+        templateResolver.setCharacterEncoding("UTF-8");
         return templateResolver;
     }
 
@@ -58,16 +60,8 @@ public class SpringConfig implements WebMvcConfigurer {
     public void configureViewResolvers(ViewResolverRegistry registry) {
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
         resolver.setTemplateEngine(templateEngine());
+        resolver.setCharacterEncoding("UTF-8");
+        resolver.setContentType("text/html; charset=UTF-8");
         registry.viewResolver(resolver);
-    }
-
-    @Override
-    public String toString() {
-        return "SpringConfig{" + "applicationContext=" + applicationContext + '}';
-    }
-
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
     }
 }

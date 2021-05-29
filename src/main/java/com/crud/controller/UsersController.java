@@ -30,16 +30,16 @@ public class UsersController {
         this.userService = userService;
     }
 
-    /**
-     * Отображение всех юзеров по адресу /users
-     * @param model для передачи данных в страницу
-     * @return страница с таблицей users
-     */
-    @GetMapping()
-    public String index(Model model) {
-        model.addAttribute("users", userService.showAllUsers());
-        return "/users/index";
-    }
+//    /**
+//     * Отображение всех юзеров по адресу /users
+//     * @param model для передачи данных в страницу
+//     * @return страница с таблицей users
+//     */
+//    @GetMapping()
+//    public String index(Model model) {
+//        model.addAttribute("users", userService.showAllUsers());
+//        return "/users/index";
+//    }
 
     /**
      * Отображение одного юзера по id
@@ -53,46 +53,46 @@ public class UsersController {
         return "/users/shower";
     }
 
-    @GetMapping("/new")
-    public String newUser(Model model) {
-        model.addAttribute("user", new User());
-        return "/users/new";
-    }
+//    @GetMapping("/new")
+//    public String newUser(Model model) {
+//        model.addAttribute("user", new User());
+//        return "/users/new";
+//    }
 
-    @PostMapping()
-    public String createUser(@ModelAttribute("user") @Valid User user,
-                             BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            // при вводе неправильных данных.
-            // См. аннотации полей класса User
-            return "/users/new";
-        }
-        userService.saveUser(user);
-        return "redirect:/users";
-    }
+//    @PostMapping()
+//    public String createUser(@ModelAttribute("user") @Valid User user,
+//                             BindingResult bindingResult) throws Exception {
+//        if (bindingResult.hasErrors()) {
+//            // при вводе неправильных данных.
+//            // См. аннотации полей класса User
+//            return "/users/new";
+//        }
+//        userService.saveUser(user);
+//        return "redirect:/users";
+//    }
 
-    @GetMapping("/{id}/edit")
-    public String editUser(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("user", userService.getUserById(id));
-        return "/users/edit";
-    }
+//    @GetMapping("/{id}/edit")
+//    public String editUser(Model model, @PathVariable("id") Long id) {
+//        model.addAttribute("user", userService.getUserById(id));
+//        return "/users/edit";
+//    }
 
-    @PostMapping("/{id}")
-    public String updateUser(@ModelAttribute("user") @Valid User user,
-                             BindingResult bindingResult,  // указывать сразу после проверяемого объекта!
-                             @PathVariable("id") Long id) {
-        if (bindingResult.hasErrors()) {
-            // при вводе неправильных данных.
-            // См. аннотации полей класса User
-            return "/users/edit";
-        }
-        userService.updateUser(id, user);
-        return "redirect:/users";
-    }
+//    @PostMapping("/{id}")
+//    public String updateUser(@ModelAttribute("user") @Valid User user,
+//                             BindingResult bindingResult,  // указывать сразу после проверяемого объекта!
+//                             @PathVariable("id") Long id) {
+//        if (bindingResult.hasErrors()) {
+//            // при вводе неправильных данных.
+//            // См. аннотации полей класса User
+//            return "/users/edit";
+//        }
+//        userService.updateUser(id, user);
+//        return "redirect:/users";
+//    }
 
-    @GetMapping("/{id}/delete")
-    public String deleteUser(@PathVariable("id") Long id) {
-        userService.deleteUserById(id);
-        return "redirect:/users";
-    }
+//    @GetMapping("/{id}/delete")
+//    public String deleteUser(@PathVariable("id") Long id) {
+//        userService.deleteUserById(id);
+//        return "redirect:/users";
+//    }
 }

@@ -3,6 +3,7 @@ package com.crud.model;
 import java.util.Collection;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -35,10 +36,6 @@ public class User implements UserDetails {
     @Size(min = 3, max = 30, message = "ERROR")
     private String name;
 
-    @NotEmpty(message = "Not be empty")
-    @Size(min = 3, max = 30, message = "ERROR")
-    private String userName;
-
     @PositiveOrZero(message = "Error")
     @Max(value = 150, message = "Error")
     private int age;
@@ -46,10 +43,18 @@ public class User implements UserDetails {
     @Email(message = "error")
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "roles", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "id"))
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "id"))
     private Set<Role> roles;
 
+    @NotEmpty(message = "Not be empty")
+    @Size(min = 3, max = 30, message = "ERROR")
+    private String username;
+
+    @NotEmpty(message = "Not be empty")
+    @Size(min = 6, max = 30, message = "ERROR")
     private String password;
 
     public User() {}
@@ -65,9 +70,9 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public User(Long id, String name, String userName, int age, String email, Set<Role> roles, String password) {
+    public User(Long id, String name, String username, int age, String email, Set<Role> roles, String password) {
         this(id, name, age, email);
-        this.userName = userName;
+        this.username = username;
         this.email = email;
         this.roles = roles;
         this.password = password;
@@ -117,8 +122,8 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String userName) {
+        this.username = userName;
     }
 
     @Override
@@ -133,7 +138,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return username;
     }
 
     @Override

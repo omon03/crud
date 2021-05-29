@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Users</title>
+    </head>
+    <body>
+        <a href="/hello-admin">Admin page</a>
+        <h2>Users</h2>
+        <table border="1px">
+            <tr>
+                <td>ID</td>
+                <td>Name</td>
+                <td>Age</td>
+                <td>Email</td>
+                <td>Username</td>
+                <td>Password</td>
+                <td>Role</td>
+                <td>Actions</td>
+            </tr>
+            <tr th:each="user : ${users}">
+                <td><a th:href="@{admin/user/{id}(id=${user.id})}"
+                       th:text="${user.id}">
+                        <p th:text="${user.id}"></p>
+                    </a>
+                </td>
+                <td><p th:text="${user.name}"></p></td>
+                <td><p th:text="${user.age}"></p></td>
+                <td><p th:text="${user.email}"></p></td>
+                <td><p th:text="${user.username}"></p></td>
+                <td><p th:text="${user.password}"></p></td>
+                <td><p th:text="${user.getRoles()}"></p></td>
+                <td>
+                    <a th:href="@{/admin/user/{id}/edit(id=${user.id})}"
+                       th:text="Edit"></a>
+                    <a th:href="@{/admin/user/{id}/delete(id=${user.id})}"
+                       th:text="Delete"></a>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <input type="button"
+               value="Add new user"
+               onclick="window.location.href = '/admin/users/new'"/>
+        <div th:insert="~{templates/footer :: logout}"></div>
+    </body>
+</html>

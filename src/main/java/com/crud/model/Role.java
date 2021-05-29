@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Table(name = "roles")
 public class Role implements GrantedAuthority {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "role", nullable = false)
@@ -66,5 +66,13 @@ public class Role implements GrantedAuthority {
     @Override
     public String getAuthority() {
         return getRole();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Role{");
+        sb.append("role='").append(role).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

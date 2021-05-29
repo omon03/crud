@@ -3,7 +3,6 @@ package com.crud.config;
 import java.util.Objects;
 import java.util.Properties;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.hibernate.jpa.HibernatePersistenceProvider;
@@ -15,31 +14,29 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableTransactionManagement(proxyTargetClass = true)
 @ComponentScan(basePackages = "com.crud")
 @PropertySource("classpath:property.properties")
-public class HibernateConfig implements WebMvcConfigurer {
+public class HibernateConfig {
 
     @Autowired
     private Environment env;
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean lcemfb =
             new LocalContainerEntityManagerFactoryBean();
         lcemfb.setDataSource(dataSource());
         lcemfb.setJpaVendorAdapter(jpaVendorAdapter());
         lcemfb.setPersistenceProviderClass(HibernatePersistenceProvider.class);
-        lcemfb.setPackagesToScan("com.crud.model");
-        lcemfb.setJpaProperties(hibernateProperties());
+        lcemfb.setPackagesToScan("com.crud");
+        lcemfb.setJpaProperties(getHibernateProperties());
         return lcemfb;
     }
 
@@ -53,7 +50,7 @@ public class HibernateConfig implements WebMvcConfigurer {
         return dataSource;
     }
 
-    private Properties hibernateProperties() {
+    private Properties getHibernateProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.show_sql", env.getRequiredProperty("hibernate.show_sql"));
         properties.setProperty("hibernate.hbm2ddl.auto", env.getRequiredProperty("hibernate.hbm2ddl.auto"));
@@ -67,7 +64,7 @@ public class HibernateConfig implements WebMvcConfigurer {
         jpaVendorAdapter.setDatabase(Database.MYSQL);
         jpaVendorAdapter.setGenerateDdl(true);
         jpaVendorAdapter.setShowSql(Boolean.parseBoolean(
-            hibernateProperties().getProperty("hibernate.show_sql")));
+            getHibernateProperties().getProperty("hibernate.show_sql")));
         return jpaVendorAdapter;
     }
 
@@ -75,11 +72,6 @@ public class HibernateConfig implements WebMvcConfigurer {
     public JpaTransactionManager jpaTransactionManager() {
         return new JpaTransactionManager(
             Objects.requireNonNull(
-                entityManagerFactoryBean().getObject()));
-    }
-
-    @Override
-    public String toString() {
-        return "HibernateConfig{" + "env=" + env + '}';
+                entityManagerFactory().getObject()));
     }
 }
